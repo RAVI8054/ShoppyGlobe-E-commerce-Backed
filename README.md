@@ -3,7 +3,7 @@
 This project is the backend system for ShoppyGlobe, an e-commerce application built using Node.js, Express.js, and MongoDB. It provides API endpoints for user authentication, product browsing, and cart management, with full CRUD support and secure JWT-based access control.
 ---
 ### 🔗 Project Links
-- 🗂️ GitHub Repo: [Online_Library_System](https://github.com/RAVI8054/Online_Library_System.git)
+- 🗂️ GitHub Repo: [ShoppyGlobe-E-commerce-Backed](https://github.com/RAVI8054/ShoppyGlobe-E-commerce-Backed.git)
 ---
 ## 📚 Project Overview
  This backend system supports:
@@ -21,6 +21,7 @@ This project is the backend system for ShoppyGlobe, an e-commerce application bu
  - ThunderClient (for testing APIs)
 ---
 ## 📁 Project Structure
+```
 ShoppyGlobe-Ecommerce-Backed/
 ├── models/
 │   ├── Product.model.js
@@ -41,9 +42,7 @@ ShoppyGlobe-Ecommerce-Backed/
 ├── index.js
 ├── package.json
 └── README.md
-
-
-
+```
 
 ##🚀Getting Started
 ### 📁 Prerequisites
