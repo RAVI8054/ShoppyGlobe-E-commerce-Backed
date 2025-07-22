@@ -1,4 +1,5 @@
 ##🛍️ ShoppyGlobe E-commerce API
+
    A backend API for the ShoppyGlobe e-commerce application, built with Node.js, Express.js, and MongoDB. This API allows users to view products, manage a shopping cart, and authenticate using JWT.
 ---
 ## 📚 Project Overview
