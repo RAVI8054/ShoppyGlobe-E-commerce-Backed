@@ -8,7 +8,6 @@ import jwt from 'jsonwebtoken';
 export function register(req, res) {
     try {
         const { firstName, email, password } = req.body;
-
         UserModel.findOne({ email })
             .then((data) => {
                 if (data) {

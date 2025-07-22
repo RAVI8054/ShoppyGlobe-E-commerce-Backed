@@ -7,12 +7,12 @@ import
       { addProduct,
         getProduct,
         getProductID } from "../controllers/products.controllers.js"
-import { verifyToken } from "../middleware/verifyToken.js";
+
 
 export default function prodctsRoutes(app){
-    app.post("/product",verifyToken ,addProduct);
-    app.get("/ products", getProduct);
-    app.get("/ products /:id", getProductID);
+    app.post("/product",addProduct);
+    app.get("/products", getProduct);
+    app.get("/products/:id", getProductID);
 }
 
 

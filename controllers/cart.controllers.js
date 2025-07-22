@@ -7,8 +7,22 @@ import CartModel from "../models/Cart.model.js";
 // app.post("/cart", addCart);
 export async function addCart(req, res) {
     try {
-        const { userId, productId, quantity } = req.body;
-        let Cart = await CartModel.create({ userId, productId, quantity });
+        const { id } = req.params;
+        const { userId, productId, quantityChange } = req.body;
+
+        // Check if productId is provided and userId exists
+        if (!userId || !productId || quantityChange === undefined) {
+            return res.status(400).json({ message: "Missing required fields." });
+        }
+
+        // Check if the product is already in the user's cart
+        const existingCartItem = await CartModel.findOne({ userId, productId });
+
+        if (existingCartItem) {
+            return res.status(400).json({ message: "Product already exists in the cart." });
+        }
+        //created product in cart
+        let Cart = await CartModel.create({ userId, productId, quantityChange });
         return res.status(201).json({ cart: Cart });
     } catch (err) {
         return res.status(500).json({ message: err.message });
@@ -16,64 +30,44 @@ export async function addCart(req, res) {
 }
 
 // -------------------------------------------------------------
-//app.put("/cart/:id", incrementCartQuantity)
-export async function incrementCartQuantity(req, res) {
+// app.put("/cart/update/:id", verifyToken, updateCartQuantity);
+
+export async function updateCartQuantity(req, res) {
     try {
-        const id = req.params.id;
-        const { quantity } = req.body;
+        const { id } = req.params;
+        const { quantityChange } = req.body;
 
-        if (typeof quantity !== 'number' || quantity < 1) {
-            return res.status(400).json({ message: "Quantity must be a positive number" });
+        if (typeof quantityChange !== 'number' || quantityChange === 0) {
+            return res.status(400).json({ message: "quantityChange must be a non-zero number" });
         }
-        const updatedCart = await CartModel.findByIdAndUpdate(
-            id,
-            { quantity:`${quantity }`},
-            { new: true, runValidators: true }
-        );
-
-        if (!updatedCart) {
+        // Find the cart item
+        const cartItem = await CartModel.findById(id);
+        if (!cartItem) {
             return res.status(404).json({ message: "Cart item not found" });
         }
 
-        res.status(200).json({ message: "Quantity incremented successfully", data: updatedCart });
+        // Calculate new quantity
+        const newquantityChange = cartItem.quantityChange + quantityChange;
+
+        if (newquantityChange < 1) {
+            // If quantity is 0 or negative, remove the item
+            await CartModel.findByIdAndDelete(id);
+            return res.status(200).json({ message: "Cart item removed as quantity reached zero or below" });
+        } else {
+            // Update quantity
+            cartItem.quantityChange = newquantityChange;
+            await cartItem.save();
+            return res.status(200).json({
+                message: `Cart quantity ${newquantityChange > 0 ? 'incremented' : 'decremented'} successfully`,
+                data: cartItem
+            });
+        }
+
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: "Failed to increment cart item" });
+        console.error("Error updating cart quantity:", err);
+        res.status(500).json({ message: "Internal server error" });
     }
 }
-export async function decrementCartQuantity(req, res) {
-    try {
-        const id = req.params.id;
-        const { quantity } = req.body;
-
-        if (typeof quantity !== 'number' || quantity < 1) {
-            return res.status(400).json({ message: "Quantity must be a positive number" });
-        }
-
-        const updatedCart = await CartModel.findByIdAndUpdate(
-            id,
-        
-            { new: true, runValidators: true }
-        );
-
-        if (!updatedCart) {
-            return res.status(404).json({ message: "Cart item not found" });
-        }
-
-        // Optional: Prevent negative quantities
-        if (updatedCart.quantity < 1) {
-            await CartModel.findByIdAndDelete(id); // Remove item if quantity goes to 0 or less
-            return res.status(200).json({ message: "Cart item removed as quantity reached zero" });
-        }
-
-        res.status(200).json({ message: "Quantity decremented successfully", data: updatedCart });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: "Failed to decrement cart item" });
-    }
-}
-
-
 
 // -------------------------------------------------------------
 //app.delete("/cart/:id", deleteCartID);
@@ -82,7 +76,7 @@ export async function deleteCartID(req, res) {
         const id = req.params.id;
         // Try to find and delete the cartItem
         const cartItem = await CartModel.findByIdAndDelete(id);
-        // If no cartItem found, respond with 404
+        // If no cartItem found
         if (cartItem === null || !cartItem) {
             return res.status(404).json({ message: "cart not found" });
         }
