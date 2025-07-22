@@ -18,25 +18,25 @@ This project is the backend system for ShoppyGlobe, an e-commerce application bu
  - ThunderClient (for testing APIs)
 ---
 ## 📁 Project Structure
-shoppyglobe-backend/
+ShoppyGlobe-Ecommerce-Backed/
 ├── models/
-│   ├── Product.js
-│   ├── Cart.js
-│   └── User.js
+│   ├── Product.model.js
+│   ├── Cart.model.js
+│   └── User.model.js
 ├── routes/
-│   ├── products.js
-│   ├── cart.js
-│   └── auth.js
+│   ├── product.routes.js
+│   ├── cart.routes.js
+│   └── user.routes.js
 ├── controllers/
-│   ├── productController.js
-│   ├── cartController.js
-│   └── authController.js
+│   ├── product.controller.js
+│   ├── cart.controller.js
+│   └── user.controller.js
 ├── middleware/
-│   └── authMiddleware.js
-├── config/
-│   └── db.js
-├── .env
-├── server.js
+│   └── verifyToken.js
+|   └── userDetialsValidation.js
+├── seed.js
+├── index.js
+├── package.json
 └── README.md
 
 
