@@ -29,7 +29,7 @@
 1. Clone the repository:
    ```bash
    git clone https://github.com/RAVI8054/ShoppyGlobe-E-commerce-Backed.git
-   cd UserFlowAPI
+   cd ShoppyGlobe-E-commerce-Backed
 2. Install dependencies:
    ```bash
    npm install 
